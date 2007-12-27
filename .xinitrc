@@ -1,6 +1,3 @@
-xsetroot -solid black
-[ -f ~/.bkg.png ] && xsetbg -background black -center -brighten 10 ~/.bkg.png
-
 # switch caps and control
 cat <<EOF | xmodmap -
     remove Lock = Caps_Lock
@@ -13,8 +10,13 @@ cat <<EOF | xmodmap -
     keycode 233 = Page_Up
 EOF
 
+xsetroot -solid black
+[ -f ~/.bkg.png ] && xsetbg -background black -center -brighten 10 ~/.bkg.png
+
 # Terminals
 [ -r "${HOME}/.xinitrc.local" ] && . ${HOME}/.xinitrc.local
 
 xset b off
-exec cwm -s
+until cwm; do
+    sleep 1
+done
