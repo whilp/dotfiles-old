@@ -5,20 +5,19 @@ servers = (
     port = "7326";
     use_ssl = "no";
     ssl_verify = "no";
-    autoconnect = "no";
   },
   {
-    address = "silc.tilderoot.com";
-    chatnet = "silc";
-    port = "706";
-    autoconnect = "no";
+    address = "cvs.openbsd.org";
+    chatnet = "openbsd-hackers";
+    port = "7326";
+    use_ssl = "no";
+    ssl_verify = "no";
   },
-  { address = "irc.bitlbee.org"; chatnet = "bitlbee"; port = "6667"; },
-  {
+  { address = "localhost"; chatnet = "bitlbee"; port = "6667"; },
+  { 
     address = "irc.freenode.net";
     chatnet = "freenode";
     port = "6667";
-    autoconnect = "no";
   },
   { address = "irc.efnet.org"; chatnet = "EFNet"; port = "6667"; },
   {
@@ -28,32 +27,37 @@ servers = (
     use_ssl = "no";
     ssl_verify = "no";
     autoconnect = "no";
+  },
+  {
+    address = "silc.peereboom.us";
+    chatnet = "silc";
+    port = "706";
+    use_ssl = "no";
+    ssl_verify = "no";
   }
 );
 
 chatnets = {
   "openbsd-porters" = {
     type = "ICB";
-    username = "wcmaier";
     nick = "wcmaier_p";
+    username = "wcmaier";
   };
-  silc = { type = "IRC"; };
-  bitl = { type = "IRC"; nick = "will"; };
+  "openbsd-hackers" = {
+    type = "ICB";
+    nick = "wcmaier";
+    username = "wcmaier";
+  };
+  silc = { type = "SILC"; nick = "wcmaier"; username = "wcmaier"; };
   freenode = {
     type = "IRC";
-    max_kicks = "4";
-    max_msgs = "1";
-    max_modes = "4";
-    max_whois = "1";
-  };
-  oftc = {
-    type = "IRC";
-    max_kicks = "4";
-    max_msgs = "1";
-    max_modes = "4";
-    max_whois = "1";
     nick = "lt_kije";
     username = "lt_kije";
+    autosendcmd = "wait 2000; /msg NickServ identify lesheros";
+    max_kicks = "4";
+    max_msgs = "1";
+    max_modes = "4";
+    max_whois = "1";
   };
   IRCnet = {
     type = "IRC";
@@ -68,7 +72,12 @@ chatnets = {
     max_msgs = "3";
     max_whois = "1";
   };
-  bitlbee = { type = "IRC"; };
+  bitlbee = {
+    type = "IRC";
+    nick = "will";
+    autosendcmd = "wait 2000; /msg &bitlbee identify lesheros";
+  };
+  oftc = { type = "IRC"; };
 };
 
 channels = (
@@ -163,7 +172,7 @@ settings = {
   core = {
     real_name = "will";
     user_name = "will";
-    nick = "will";
+    nick = "wcmaier_p";
     timestamp_format = "%H:%M:%S";
     log_timestamp = "%Y.%m.%d %H:%M";
   };
@@ -340,7 +349,7 @@ windows = {
         type = "CHANNEL";
         chat_type = "IRC";
         name = "&bitlbee";
-        tag = "localhost";
+        tag = "bitlbee";
       }
     );
   };
@@ -359,7 +368,7 @@ windows = {
       {
         type = "CHANNEL";
         chat_type = "IRC";
-        name = "#openbsd";
+        name = "#OpenBSD";
         tag = "freenode";
       }
     );
@@ -390,7 +399,7 @@ windows = {
         type = "CHANNEL";
         chat_type = "ICB";
         name = "porters";
-        tag = "ICBnet";
+        tag = "openbsd-porters";
       }
     );
   };
@@ -398,9 +407,9 @@ windows = {
     items = (
       {
         type = "CHANNEL";
-        chat_type = "SILC";
-        name = "#porters";
-        tag = "SILCNet";
+        chat_type = "ICB";
+        name = "hackers";
+        tag = "openbsd-hackers";
       }
     );
   };
@@ -410,9 +419,19 @@ windows = {
         type = "CHANNEL";
         chat_type = "SILC";
         name = "#openbsd";
-        tag = "SILCNet";
+        tag = "silc";
+      }
+    );
+  };
+  10 = {
+    items = (
+      {
+        type = "QUERY";
+        chat_type = "IRC";
+        name = "merdely";
+        tag = "freenode";
       }
     );
   };
 };
-mainwindows = { 1 = { first_line = "1"; lines = "45"; }; };
+mainwindows = { 1 = { first_line = "1"; lines = "50"; }; };

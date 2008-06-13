@@ -78,22 +78,20 @@ cabbrev Q q
 let use_xhtml = 1
 let html_use_css = 1
 
+" Stuff for ada.vim.
+let g:ada_default_compiler = 'gnat'
+let g:mapleader = "<F12>"
+
 " Auto-encrypt files.
 augroup safe
     au!
-    au BufReadPre,FileReadPre *.safe set viminfo=
-    au BufReadPre,FileReadPre *.safe set noswapfile
+    au BufReadPre,FileReadPre ~/.safe/* set viminfo=
+    au BufReadPre,FileReadPre ~/.safe/* set noswapfile
 
-    au BufReadPost,FileReadPost *.safe set bin
-    au BufReadPost,FileReadPost *.safe :%!openssl bf -d -a 2>/dev/null
-    au BufReadPost,FileReadPost *.safe |redraw!
-    au BufReadPost,FileReadPost *.safe set nobin
+    au VimLeave ~/.safe/* :!clear
+augroup END
 
-    au BufWritePre,FileWritePre *.safe set bin
-    au BufWritePre,FileWritePre *.safe :%!openssl bf -salt -a 2>/dev/null
-    au BufWritePre,FileWritePre *.safe set nobin
-    au BufWritePost,FileWritePost *.safe undo
-    au BufWritePost,FileWritePost *.safe |redraw!
-
-    au VimLeave *.safe :!clear
+augroup filetypes
+    au!
+    au BufRead,BufNewFile *		if &ft == 'make' | set ts=8 sts=0 noexpandtab | endif
 augroup END
