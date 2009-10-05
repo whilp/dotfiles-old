@@ -111,40 +111,23 @@ lsx () {
     done | sort -u
 }
 secret () {
+    cleanup () {
+	SVND=$1
+	MOUNT=$2
+	sudo vnconfig -u "${SVND}" > /dev/null 2>&1
+	sudo umount "${UMOUNT}" > /dev/null 2>&1
+    }
     SAFEDIR="${HOME}/.safe"
     SAFEIMG="${HOME}/.safe.img"
     SVND="s$(sudo vnconfig -l |\
         sed -e '/not in use$/!d; s/:.*$//' | head -1)"
-    [ "${SVND}" != 's' ] || ("no free (s)vnd devices"; return 1)
+    trap "cleanup ${SVND} ${SAFEDIR}" EXIT
+    [ "${SVND}" != 's' ] || (echo "no free (s)vnd devices"; return 1)
     sudo vnconfig -k "${SVND}" "${SAFEIMG}" && \
     sudo mount "/dev/${SVND}c" "${SAFEDIR}" && \
     vim "${SAFEDIR}"
     sudo umount "${SAFEDIR}" && \
     sudo vnconfig -u "${SVND}"
-}
-TMUX="tmux -S ${TMUX_SOCK}"
-attach () {
-    SESSION=$1
-    ${TMUX} has-session -t "${SESSION}" > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-	${TMUX} new-session -ds "${SESSION}"
-    	if [ -n "${TMUX_CONFIG}" ]; then
-       	    ${TMUX} source-file ${TMUX_CONFIG}
-    	fi
-    fi
-    ${TMUX} attach-session -dt "${SESSION}"
-}
-meta () {
-    TMUX_CONFIG=/home/will/.meta.conf
-    attach meta
-}
-mobi () {
-    TMUX_CONFIG=/home/will/.mobi.conf
-    attach mobi
-}
-master () {
-    TMUX_CONFIG=/home/will/.master.conf
-    attach master
 }
 sleepuntil () {
 	DATE=$1 
