@@ -6,6 +6,7 @@ editor = ~/bin/hgeditor
 merge = vimdiff
 username = Will Maier <willmaier@ml1.net>
 ignore = ~/.hgignore-global
+remotecmd = ~/bin/hg
 
 [diff]
 git=1
@@ -25,6 +26,9 @@ hggit =
 
 [bookmarks]
 track.current = True
+
+[alias]
+rec = record
 
 [extdiff]
 cmd.vimdiff = vim

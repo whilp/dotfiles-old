@@ -20,6 +20,7 @@ set header_cache=~/.maildir/.cache
 set implicit_autoview=yes
 set include=yes
 set ispell="aspell -e -c"
+set mail_check=2
 set mark_old=no
 set mask='!^(\.[^.]|attic|.*log)'
 set mbox_type=Maildir
@@ -40,6 +41,8 @@ set sort=threads
 set sort_aux=reverse-last-date
 set spoolfile='/var/mail/will'
 set ssl_starttls
+set timeout=60
+set time_inc=100
 set wait_key=no
 
 alternates "(wcmaier@wisc\.edu|wcmaier@hep\.wisc\.edu|wcmaier@gmail\.com|willmaier@ml1\.net|wcmaier@openbsd.org)"
@@ -47,10 +50,10 @@ alternates "(wcmaier@wisc\.edu|wcmaier@hep\.wisc\.edu|wcmaier@gmail\.com|willmai
 # Macros.
 macro index Q "<copy-message>=queue<enter><enter>" "Add message to the queue"
 macro pager Q "<copy-message>=queue<enter><enter>" "Add message to the queue"
-macro index S "|sb_filter.py -s >/dev/null<enter><save-message>=attic/spam<enter><enter>" "Mark as spam"
-macro pager S "|sb_filter.py -s >/dev/null<enter><save-message>=attic/spam<enter><enter>" "Mark as spam"
-macro index H "|sb_filter.py -g | fdm -mqa stdin fetch<enter><delete-message>" "Mark as ham"
-macro pager H "|sb_filter.py -g | fdm -mqa stdin fetch<enter><delete-message>" "Mark as ham"
+macro index S "|spambayes -s >/dev/null<enter><save-message>=attic/spam<enter><enter>" "Mark as spam"
+macro pager S "|spambayes -s >/dev/null<enter><save-message>=attic/spam<enter><enter>" "Mark as spam"
+macro index H "|spambayes -g | fdm -mqa stdin fetch<enter><delete-message>" "Mark as ham"
+macro pager H "|spambayes -g | fdm -mqa stdin fetch<enter><delete-message>" "Mark as ham"
 macro pager o "|~/bin/viewitem<enter>" "Open RATM item link in a browser"
 macro index o "|~/bin/viewitem<enter>" "Open RATM item link in a browser"
 macro index C "<change-folder>?" "open a different folder"
@@ -85,8 +88,9 @@ bind index \CW buffy-list
 
 # Mailboxes.
 mailboxes `\
-    find ~/.maildir -type d -path '*cur' | \
-    sed -e '/\/attic\//d; s/^.*\.maildir\///; s/\/cur$//' | \
+    find ~/.maildir -type d -path '*cur' \
+		\! \( -path "*/attic/*" -or -path "*/system/*" -or -path "*/drafts/*" \) | \
+    sed -e 's/^.*\.maildir\///; s/\/cur$//' | \
     xargs -I% echo -n ' =%'`
 
 # Headers.
@@ -160,3 +164,5 @@ folder-hook =hep/req unset sort_re
 folder-hook =hep/req 'set index_format="%4C %[%y.%m.%dT%H:%M] %-15.15n  %Z %s"'
 fcc-hook "~thelp@hep\.wisc\.edu" "sent"
 
+folder-hook =osg/goc set sort_re=no
+folder-hook =osg/goc set strict_threads=no
