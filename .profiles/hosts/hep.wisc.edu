@@ -13,6 +13,8 @@ PATHS="
     $HOME/bin
     /usr/kerberos/bin
     /usr/kerberos/sbin
+    /condor/bin
+    /condor/sbin
     /cms/sw/python/2.6/bin
     /sbin
     /usr/sbin
@@ -37,7 +39,7 @@ export INPUTRC LANG LC_ALL PATH PS1 TMUXSOCK
 unset USERNAME
 
 srv () {
-	sudo /sbin/service $*
+    sudo /sbin/service $*
 }
 
 alias da="dcache_absent_pools -Hhttp://cmsdcache02.hep.wisc.edu:2288/ -d /cms/sw/dcache/cftree"
