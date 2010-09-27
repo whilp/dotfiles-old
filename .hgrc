@@ -34,6 +34,12 @@ dpush = push -b default
 patchn = import --no-commit
 rec = record
 
+shortin = in --style ~/.mercurial/short.style
+shin = shortin
+
+shortout = out --style ~/.mercurial/short.style
+shout = shortout
+
 shortheads = heads --template ~/.mercurial/short.style
 shead = shortheads
 
@@ -48,9 +54,7 @@ opts.vimdiff = -f '+next' '+execute "DirDiff" argv(0) argv(1)'
 
 [email]
 from = Will Maier <willmaier@ml1.net>
-
-[smtp]
-host = localhost
+method = sendmail
 
 [trusted]
 users = root

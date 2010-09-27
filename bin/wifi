@@ -9,31 +9,56 @@ INTERFACE=$(${IFCONFIG} ${WLAN} 2>/dev/null | (IFS=:; read INT REST; echo $INT))
 IFCONFIG="${IFCONFIG} ${INTERFACE}"
 DHCLIENT="${SUDO} /sbin/dhclient ${INTERFACE}"
 
+ifclear () {
+    ${IFCONFIG} -nwid -nwkey -wpa -wpapsk
+}
+
+wep () {
+    ${IFCONFIG} nwid "$1" nwkey "$2"
+}
+
+wpa () {
+    ${IFCONFIG} nwid "$1" wpa wpapsk `wpa-psk "$1" "$2"`
+}
+
 set -e
 case $1 in
-    ap*)
-        ${IFCONFIG} nwid apnet3.0 wpa wpapsk `wpa-psk apnet3.0 1409badgers`
+    a*) # ap
+        ifclear
+        wap apnet3.0 1409badgers
         ${DHCLIENT};;
-    manna*)
-        ${IFCONFIG} nwid Manna nwkey mannanet
+    ma*) # manna
+        ifclear
+        wep Manna mannanet
         ${DHCLIENT};;
-    mike*)  
-        ${IFCONFIG} nwid linksys_SES_42378 \
-            wpa wpapsk `wpa-psk linksys_SES_42378 m2guwzabgw78f04x`
+    mi*) # mike
+        ifclear
+        wpa linksys_SES_42378 m2guwzabgw78f04x
         ${DHCLIENT};;
-    pop*)   
-        ${IFCONFIG} nwid home wpa wpapsk `wpa-psk 'home' NTK6m4w7my`
+    p*) # pop
+        ifclear
+        wpa home NTK6m4w7my
         ${DHCLIENT};;
-    radi*) 
+    ra*) # radical_edward
+        ifclear
         ${IFCONFIG} nwid radical_edward
         ${DHCLIENT};;
-    rosie*)
-        ${IFOCNFIG} nwid Apt4 wpa wpapsk `wpa-psk Apt4 Jordan23`
+    ro*) # rosie
+        ifclear
+        wpa Apt4 Jordan23
         ${DHCLIENT};;
-    trev*)
-        ${IFCONFIG} nwid '/:House:\' wpa wpapsk `wpa-psk '/:House:\' rust1cc0ff33`
+    s*) # scan
+        ${IFCONFIG} scan;;
+    th*) # three lakes
+        ifclear
+        wpa CastleMagner llennoco46
         ${DHCLIENT};;
-    uw*)
+    tr*) # trev
+        ifclear
+        wpa '/:House:\' rust1cc0ff33
+        ${DHCLIENT};;
+    u*) # UW
+        ifclear
         ${DHCLIENT};;
     *)
         echo "===> Unknown network: $1"; exit 1;;

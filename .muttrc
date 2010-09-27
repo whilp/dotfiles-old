@@ -6,7 +6,7 @@ source "~/.mutt/pgp"
 # Settings.
 set alias_file="~/.mutt/aliases"
 set ascii_chars=yes
-set beep_new=yes
+set beep_new=no
 set certificate_file=~/.mutt.certificates
 set charset="//TRANSLIT"
 set copy=yes
@@ -20,7 +20,7 @@ set header_cache=~/.maildir/.cache
 set implicit_autoview=yes
 set include=yes
 set ispell="aspell -e -c"
-set mail_check=2
+set mail_check=0
 set mark_old=no
 set mask='!^(\.[^.]|attic|.*log)'
 set mbox_type=Maildir
@@ -85,6 +85,15 @@ bind pager J next-undeleted
 bind pager K previous-undeleted
 bind pager \CW buffy-list
 bind index \CW buffy-list
+
+bind pager <Right> next-new-then-unread
+bind index <Right> next-new-then-unread
+bind pager <Left> previous-new-then-unread
+bind index <Left> previous-new-then-unread
+bind pager x sync-mailbox
+bind index x sync-mailbox
+bind pager R read-thread
+bind index R read-thread
 
 # Mailboxes.
 mailboxes `\
