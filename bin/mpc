@@ -1,10 +1,22 @@
 #!/bin/sh
 
+LENGTH=80
 QUIET=
 SERVER=localhost:6600
 VERBOSE=
 
 # http://mpd.wikia.com/wiki/Protocol_Reference
+
+shorten () {
+    LENGTH=$1; shift
+    STRING="$*"
+    typeset -L "$((${LENGTH} - 4))" NEW="${STRING}^"
+    NEWSTRING="${NEW}"
+    NEWSTRING="${NEWSTRING%%^ *}"
+    NEWSTRING="${NEWSTRING%^}"
+    [ "${NEWSTRING}" = "${STRING}" ] || NEWSTRING="${NEWSTRING}..."
+    echo "${NEWSTRING}"
+}
 
 usage () {
     echo "Usage: $0 [-hq] [-s HOST:PORT] [...]"
@@ -274,11 +286,45 @@ toggleplay () {
     return $?
 }
 
-while getopts hqs:v ARG; do
+nowplaying () {
+    (mpc status; mpc currentsong) | (
+    MODE=""
+    STATE=""
+    STATUS=""
+    ID=""
+    while read KEY VALUE; do
+        case "${KEY}${VALUE}" in
+            random:1) MODE="${MODE}r";;
+            repeat:1) MODE="${MODE}R";;
+            consume:1) MODE="${MODE}c";;
+            single:1) MODE="${MODE}1";;
+            xfade:1) MODE="${MODE}x";;
+            state:stop) STATE="${STATE}s";;
+            state:pause) STATE="${STATE}p";;
+        esac
+        case "${KEY%:}" in
+            Artist|Title) STATUS="${STATUS} - ${VALUE}";;
+            file) FILE="${VALUE}";;
+            Pos) ID="${VALUE}";;
+        esac
+    done
+    [ -n "${ID}" ] && MODE="${MODE}|#${ID}"
+    [ -n "${STATE}" ] && MODE="${MODE}|${STATE}"
+    STATUS="${STATUS# - }"
+    [ -z "${STATUS}" ] && STATUS="${FILE}"
+    if [ -n "${STATUS}" ]; then
+        STATUS="|${STATUS}"
+    fi
+    echo "[$(shorten "$((${LENGTH} - 2))" "${MODE}${STATUS}")]"
+    )
+}
+
+while getopts hl:qs:v ARG; do
     case "${ARG}" in
         h) usage; exit 0;;
+        l) LENGTH=${OPTARG};;
         q) QUIET=1;;
-        s) SERVER=${ARG};;
+        s) SERVER=${OPTARG};;
         v) VERBOSE=1;;
         *) usage; exit 1;;
     esac
@@ -290,7 +336,7 @@ PORT=${SERVER#*:}
 PORT=${PORT:-6600}
 
 case "$*" in
-    state|toggleplay) $*;;
+    nowplaying|state|toggleplay) $*;;
     *) mpc "$*";;
 esac
 
