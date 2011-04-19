@@ -50,6 +50,7 @@ match "^List-Id:.*<lopsa-us-wi-mad\\.lists\\.lopsa\\.org>" in headers action mai
 match "^X-Mailinglist: talk@metabug\\.org$" in headers action maildir "${groups}/metabug"
 match "^List-Id: Mailing list for MadSec <madsec-foofus\\.net>" in headers action maildir "${groups}/madsec"
 match "^List-ID:.*<madlug-book-club\\.googlegroups\\.com>" in headers action maildir "${groups}/madbook"
+match "^List-Id:.*<chicago\\.python\\.org>" in headers action maildir "${groups}/chipy"
 
 # FOSS.
 match "^List-Id:.*mercurial\\.selenic\\.com" in headers action maildir "${foss}/hg"
@@ -172,6 +173,7 @@ match "^(From|To|Cc):.*@[^ ]*\\.?hep\\.wisc\\.edu" in headers {
     # HEP root mail.
     match "^(From|To|Cc):.*(root|operator|cron)@[^ ]*\\.?hep" in headers {
         match "^Subject: IDS CRITICAL: intrusion detected" in headers action drop
+        match "^From: .*coffee\\.hep\\.wisc\\.edu" in headers action drop
         match all action maildir "${hep}/root"
     }
     match all action "hep"
