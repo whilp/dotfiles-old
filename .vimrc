@@ -12,6 +12,7 @@ set laststatus=2
 set nobackup
 set nocompatible
 set nofoldenable
+set nohls
 set number
 set ruler
 set showcmd
@@ -46,21 +47,8 @@ noremap Y y$
 noremap [[ :diffget<CR>
 noremap ]] :diffput<CR>
 noremap F gw}
-
-" (Un)expand a screenful of tabs.
-map ;4 H!Lv 4Mj
-map ;2 H!Lv 2Mj
-map ;E H!Lv EMj
-map ;e H!Lv eMj
-map ;F {!}v f
-map ;f {!}v f}
-map ;s !lv s
-map ;w :w
-map ;x :x
-map ;q :q
-
-" Source vimrc.
-map ,v :sp $VIMRC_
+noremap <Leader>p :set invpaste paste?<CR>
+noremap <Leader>s :sp $VIMRC_
 
 abbreviate W w
 abbreviate X x
