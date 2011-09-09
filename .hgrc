@@ -4,6 +4,7 @@ merge = vimdiff -o
 username = Will Maier <willmaier@ml1.net>
 ignore = ~/.mercurial/ignores
 remotecmd = ~/bin/hg
+style = compact
 
 [diff]
 git=yes
@@ -20,6 +21,7 @@ hgext.convert =
 hgext.graphlog =
 hgext.mq =
 hgext.patchbomb =
+hgext.schemes = 
 # pip install hg-git
 hggit = 
 
@@ -63,3 +65,7 @@ method = sendmail
 
 [trusted]
 users = root
+
+[schemes]
+meta = ssh://meta.lfod.us/share/
+hep = ssh://wcmaier@login01//afs/hep.wisc.edu/code/hg/repos/
